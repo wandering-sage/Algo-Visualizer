@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="shortcut icon" href="./Images/favicon.ico" />
+		<link rel="stylesheet" href="./css/style.css" />
+		<title>Algo Visualizer</title>
+	</head>
+	<body>
+		<div class="toolbar">
+			<div>
+				<label>Array Size:</label>
+				<input
+					type="range"
+					min="10"
+					max="130"
+					step="5"
+					class="sizeInput"
+				/>
+				<label>Sorting Speed:</label>
+				<input type="range" class="speedInput" />
+				<button class="genButton">Genrate New Array</button>
+			</div>
+		</div>
+		<div class="sidebar">
+			<div id="bs" class="algoBtn">Bubble Sort</div>
+			<div id="qs" class="algoBtn">Quick Sort</div>
+			<div id="ms" class="algoBtn">Merge Sort</div>
+			<button class="sortBtn">Sort!</button>
+		</div>
+		<div class="arrayContainer"></div>
+		<script type="module" src="./js/main.js"></script>
+	</body>
+</html>
