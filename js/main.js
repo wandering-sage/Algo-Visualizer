@@ -13,7 +13,7 @@ var algoBtns = Array.from(document.querySelectorAll(".algoBtn"));
 var green = "rgb(66,244,134)";
 var red = "rgb(244, 134, 66)";
 var blue = "rgb(66, 134, 244)";
-var black = "rgb(64,64,64)";
+var sortedColor = "rgb(181,119,231)";
 
 speedInput.oninput = () => {
 	sortingSpeed = speedInput.value;
@@ -111,6 +111,12 @@ async function colorChange(ms, color, ...elms) {
 	});
 	await sleep(ms);
 }
+async function colorChangeAll(ms, color) {
+	await sleep(ms);
+	for (let i = 0; i < arraySize; i++) {
+		getContainerElement(i).style.backgroundColor = color;
+	}
+}
 
 async function bubbleSort() {
 	let n = arraySize;
@@ -126,11 +132,13 @@ async function bubbleSort() {
 				await colorChange(sortDelay, green, i, j);
 				newn = i;
 			}
-			await colorChange(0, blue, j);
+			colorChange(0, blue, j);
 		}
-		await colorChange(0, black, i - 1);
+		await colorChange(0, sortedColor, i - 1);
 		n = newn;
 	}
+	await colorChangeAll(100, green);
+	await colorChangeAll(500, sortedColor);
 }
 
 function sleep(ms) {
