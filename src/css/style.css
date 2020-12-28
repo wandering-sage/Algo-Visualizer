@@ -71,3 +71,11 @@ body {
 	border-radius: 20px;
 	background-color: rgb(66, 244, 134);
 }
+
+.madeBy {
+	position: absolute;
+	bottom: 3%;
+	right: 3%;
+	color: rgb(240, 240, 240);
+	font-size: 1.4em;
+}

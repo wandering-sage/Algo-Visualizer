@@ -1,9 +1,11 @@
 var container = document.querySelector(".arrayContainer");
 var cntrW = 0.7 * window.innerWidth;
 var cntrH = 0.75 * window.innerHeight;
-var sortingSpeed = 50;
+var sortingSpeed = 80;
 var sortDelay = 80;
-var arraySize = 50;
+var arraySize = 100;
+var maxArraySIze = 200;
+var minArraySize = 10;
 var array = [];
 var sizeInput = document.querySelector(".sizeInput");
 var speedInput = document.querySelector(".speedInput");
@@ -13,7 +15,8 @@ var algoBtns = Array.from(document.querySelectorAll(".algoBtn"));
 var green = "rgb(66,244,134)";
 var red = "rgb(244, 134, 66)";
 var blue = "rgb(66, 134, 244)";
-var black = "rgb(64,64,64)";
+var sortedColor = "rgb(181,119,231)";
+var yellow = "rgb(235,233,93)";
 
 speedInput.oninput = () => {
 	sortingSpeed = speedInput.value;
@@ -39,9 +42,7 @@ function generateArray() {
 	container.className = "arrayContainer";
 	document.body.appendChild(container);
 	for (let i = 1; i <= arraySize; i++) {
-		array.push(
-			Math.floor(i * Math.random() + (cntrH / 1.27) * Math.random() + 30)
-		);
+		array.push(Math.floor(50 + (i * cntrH * 0.9) / arraySize));
 	}
 	array = shuffle(array);
 	drawArray(array);
@@ -49,10 +50,8 @@ function generateArray() {
 
 function drawArray(arr) {
 	arr.forEach((el, i) => {
-		var w = Math.floor(cntrW / (1.5 * arraySize));
-		var m = w / 1.5;
-		if (arraySize > 60) {
-		}
+		var m = mapValue(arraySize, minArraySize, maxArraySIze, 10, 2.5);
+		var w = cntrW / arraySize - m;
 		var x = createArrayElement(el, w, m, i);
 		container.appendChild(x);
 	});
@@ -71,24 +70,27 @@ function createArrayElement(h, w, m, i) {
 }
 
 async function sortArray() {
-	sortBtn.style.backgroundColor = red;
 	var activeBtn = algoBtns.find((e) => e.className.includes("btnActive"));
-	if (!activeBtn) {
-		sortBtn.style.backgroundColor = green;
-		return;
-	}
+	if (!activeBtn) return;
 
+	sortBtn.style.backgroundColor = red;
+	sizeInput.disabled = true;
+	genButton.disabled = true;
+	sortBtn.disabled = true;
 	switch (activeBtn.id) {
 		case "bs":
-			await bubbleSort(array, swapContainerElement);
+			await bubbleSort();
 			break;
 		case "qs":
-			console.log("Working on Quick Sort");
+			await quickSort();
 			break;
 		case "ms":
-			console.log("Working on Merge Sort");
+			await mergeSort();
 			break;
 	}
+	sizeInput.disabled = false;
+	genButton.disabled = false;
+	sortBtn.disabled = false;
 	sortBtn.style.backgroundColor = green;
 }
 
@@ -96,20 +98,28 @@ function getContainerElement(index) {
 	return document.querySelector(`[data-index="${index}"]`);
 }
 
-async function swapContainerElement(ms, i, j) {
-	let temp = array[i - 1];
-	array[i - 1] = array[i];
-	array[i] = temp;
+async function swapContainerElement(i, j) {
+	var temp = array[i];
+	array[i] = array[j];
+	array[j] = temp;
 	getContainerElement(i).style.height = `${array[i]}px`;
 	getContainerElement(j).style.height = `${array[j]}px`;
-	await sleep(ms);
+	sortDelay = mapValue(sortingSpeed, 0, 100, 200, 0);
+	await sleep(sortDelay);
 }
 
-async function colorChange(ms, color, ...elms) {
+async function colorChange(color, ...elms) {
 	elms.forEach((e) => {
 		getContainerElement(e).style.backgroundColor = color;
 	});
+	sortDelay = mapValue(sortingSpeed, 0, 100, 200, 0);
+	if (color != blue) await sleep(sortDelay);
+}
+async function colorChangeAll(ms, color) {
 	await sleep(ms);
+	for (let i = 0; i < arraySize; i++) {
+		getContainerElement(i).style.backgroundColor = color;
+	}
 }
 
 async function bubbleSort() {
@@ -117,20 +127,66 @@ async function bubbleSort() {
 	while (n >= 1) {
 		let newn = 0;
 		for (var i = 1; i < n; i++) {
-			sortDelay = mapValue(sortingSpeed, 0, 100, 200, 0);
 			let j = i - 1;
-			await colorChange(sortDelay, green, i, j);
+			await colorChange(green, i, j);
 			if (array[j] > array[i]) {
-				await colorChange(sortDelay, red, i, j);
-				await swapContainerElement(sortDelay, i, j);
-				await colorChange(sortDelay, green, i, j);
+				await colorChange(red, i, j);
+				await swapContainerElement(i, j);
+				await colorChange(green, i, j);
 				newn = i;
 			}
-			await colorChange(0, blue, j);
+			colorChange(blue, j);
 		}
-		await colorChange(0, black, i - 1);
+		await colorChange(sortedColor, i - 1);
 		n = newn;
 	}
+	await colorChangeAll(100, green);
+	await colorChangeAll(500, sortedColor);
+}
+
+async function quickSort() {
+	await qs(0, arraySize - 1);
+	await colorChangeAll(100, green);
+	await colorChangeAll(500, sortedColor);
+
+	async function qs(lo, hi) {
+		if (lo < hi) {
+			let p = await partition(lo, hi);
+			await qs(lo, p);
+			// for()
+			await qs(p + 1, hi);
+		}
+	}
+	async function partition(lo, hi) {
+		let pivot = array[lo];
+		let i = lo;
+		let j = hi;
+		await colorChange(green, i);
+		await colorChange(green, j);
+		while (true) {
+			while (array[i] < pivot) {
+				await colorChange(blue, i);
+				i++;
+				await colorChange(green, i);
+			}
+			while (array[j] > pivot) {
+				await colorChange(blue, j);
+				j--;
+				await colorChange(green, j);
+			}
+			if (i >= j) {
+				await colorChange(sortedColor, lo);
+				return j;
+			}
+			await colorChange(red, i, j);
+			await swapContainerElement(i, j);
+			await colorChange(green, i, j);
+		}
+	}
+}
+
+async function mergeSort() {
+	//
 }
 
 function sleep(ms) {
