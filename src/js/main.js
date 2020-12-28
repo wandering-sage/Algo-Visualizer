@@ -1,5 +1,5 @@
 var container = document.querySelector(".arrayContainer");
-var cntrW = 0.7 * window.innerWidth;
+var cntrW = 0.75 * window.innerWidth;
 var cntrH = 0.75 * window.innerHeight;
 var sortingSpeed = 80;
 var sortDelay = 80;
@@ -81,6 +81,9 @@ async function sortArray() {
 		case "bs":
 			await bubbleSort();
 			break;
+		case "hs":
+			await heapSort();
+			break;
 		case "qs":
 			await quickSort();
 			break;
@@ -104,6 +107,17 @@ async function swapContainerElement(i, j) {
 	array[j] = temp;
 	getContainerElement(i).style.height = `${array[i]}px`;
 	getContainerElement(j).style.height = `${array[j]}px`;
+	sortDelay = mapValue(sortingSpeed, 0, 100, 200, 0);
+	await sleep(sortDelay);
+}
+async function dragSwap(i, j) {
+	for (let k = j; k > i; k--) {
+		var temp = array[k];
+		array[k] = array[k - 1];
+		array[k - 1] = temp;
+		getContainerElement(k).style.height = `${array[k]}px`;
+		getContainerElement(k - 1).style.height = `${array[k - 1]}px`;
+	}
 	sortDelay = mapValue(sortingSpeed, 0, 100, 200, 0);
 	await sleep(sortDelay);
 }
@@ -144,6 +158,49 @@ async function bubbleSort() {
 	await colorChangeAll(500, sortedColor);
 }
 
+async function heapSort() {
+	let n = arraySize;
+	for (let i = n / 2 - 1; i >= 0; i--) await heapify(n, i);
+
+	for (let i = n - 1; i > 0; i--) {
+		await colorChange(red, i, 0);
+		await swapContainerElement(0, i);
+		await colorChange(green, 0, i);
+		await colorChange(sortedColor, i);
+		await heapify(i, 0);
+	}
+
+	await colorChangeAll(100, green);
+	await colorChangeAll(500, sortedColor);
+
+	async function heapify(n, i) {
+		let largest = i;
+		let l = 2 * i + 1;
+		let r = 2 * i + 2;
+		await colorChange(green, i);
+
+		if (l < n && array[l] > array[largest]) {
+			largest = l;
+			await colorChange(green, l);
+		}
+
+		if (r < n && array[r] > array[largest]) {
+			await colorChange(blue, l);
+			largest = r;
+			await colorChange(green, r);
+		}
+
+		if (largest != i) {
+			await colorChange(red, i, largest);
+			await swapContainerElement(i, largest);
+			await colorChange(green, i, largest);
+			await colorChange(blue, i, largest);
+			await heapify(n, largest);
+		}
+		await colorChange(blue, i);
+	}
+}
+
 async function quickSort() {
 	await qs(0, arraySize - 1);
 	await colorChangeAll(100, green);
@@ -153,7 +210,6 @@ async function quickSort() {
 		if (lo < hi) {
 			let p = await partition(lo, hi);
 			await qs(lo, p);
-			// for()
 			await qs(p + 1, hi);
 		}
 	}
@@ -175,7 +231,7 @@ async function quickSort() {
 				await colorChange(green, j);
 			}
 			if (i >= j) {
-				await colorChange(sortedColor, lo);
+				await colorChange(sortedColor, j);
 				return j;
 			}
 			await colorChange(red, i, j);
@@ -186,7 +242,51 @@ async function quickSort() {
 }
 
 async function mergeSort() {
-	//
+	await msSplit(0, arraySize - 1);
+	await colorChangeAll(100, green);
+	await colorChangeAll(500, sortedColor);
+
+	async function msSplit(l, r) {
+		if (l < r) {
+			let m = Math.floor((l + r) / 2);
+			await msSplit(l, m);
+			await msSplit(m + 1, r);
+			await msMerge(l, m, r);
+		}
+	}
+
+	async function msMerge(l, m, r) {
+		let i = l;
+		let j = m + 1;
+		if (array[m] <= array[j]) {
+			return;
+		}
+		while (i <= m && j <= r) {
+			await colorChange(green, i, j);
+			if (array[i] <= array[j]) {
+				await colorChange(blue, i);
+				if (l == 0 && r == arraySize - 1) {
+					colorChange(sortedColor, i);
+				}
+				i++;
+				await colorChange(green, i);
+			} else {
+				await colorChange(red, i, j);
+				await dragSwap(i, j);
+				await colorChange(green, i, j);
+
+				m++;
+
+				if (l == 0 && r == arraySize - 1) {
+					colorChange(sortedColor, i);
+					colorChange(blue, j);
+				} else await colorChange(blue, i, j);
+				i++;
+				j++;
+			}
+		}
+		await colorChange(blue, i);
+	}
 }
 
 function sleep(ms) {

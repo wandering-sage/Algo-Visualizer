@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<link rel="preconnect" href="https://fonts.gstatic.com" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap"
+			rel="stylesheet"
+		/>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="shortcut icon" href="./Images/favicon.png" />
@@ -19,12 +24,13 @@
 					class="sizeInput"
 				/>
 				<label>Sorting Speed:</label>
-				<input type="range" class="speedInput" step="10" />
+				<input type="range" class="speedInput" step="10" value="80" />
 				<button class="genButton">Genrate New Array</button>
 			</div>
 		</div>
 		<div class="sidebar">
 			<div id="bs" class="algoBtn">Bubble Sort</div>
+			<div id="hs" class="algoBtn">Heap Sort</div>
 			<div id="qs" class="algoBtn">Quick Sort</div>
 			<div id="ms" class="algoBtn">Merge Sort</div>
 			<button class="sortBtn">Sort!</button>
