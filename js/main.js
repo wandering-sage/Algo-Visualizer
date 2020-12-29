@@ -11,6 +11,7 @@ var sizeInput = document.querySelector(".sizeInput");
 var speedInput = document.querySelector(".speedInput");
 var genButton = document.querySelector(".genButton");
 var sortBtn = document.querySelector(".sortBtn");
+var infoBtn = document.querySelector(".infoBtn");
 var algoBtns = Array.from(document.querySelectorAll(".algoBtn"));
 var green = "rgb(66,244,134)";
 var red = "rgb(244, 134, 66)";
@@ -21,14 +22,15 @@ var yellow = "rgb(235,233,93)";
 speedInput.oninput = () => {
 	sortingSpeed = speedInput.value;
 };
-
 sizeInput.oninput = () => {
 	arraySize = sizeInput.value;
 	generateArray();
 };
 
-generateArray();
+guidePopup();
+infoBtn.addEventListener("click", guidePopup);
 
+generateArray();
 genButton.addEventListener("click", generateArray);
 
 algoBtns.forEach((e) => e.addEventListener("click", toggleOpen));
@@ -135,6 +137,9 @@ async function colorChangeAll(ms, color) {
 		getContainerElement(i).style.backgroundColor = color;
 	}
 }
+
+// *************************Algorithms*********************************
+// *********************************************************************
 
 async function bubbleSort() {
 	let n = arraySize;
@@ -286,6 +291,113 @@ async function mergeSort() {
 			}
 		}
 		await colorChange(blue, i);
+	}
+}
+
+// *************************** Guide Popup *********************
+// *************************************************************
+
+function guidePopup() {
+	var guideTites = [
+		"Welcome",
+		"Algorithms",
+		"Visualize",
+		"Controls",
+		"Thank You",
+	];
+	var guideExplainations = [
+		"Hello, this is a Sorting Algorithm Visualizer",
+		"Firstly, select an Algorithm from here to Visualize. They are listed in slowest to fastest order",
+		"After selecting Algorithm, hit this Sort button to see that algorithm in action.",
+		"Here are the user controls, you can change the array size, sorting speed. (Drag the sorting speed to maximum it will be fun XD)",
+		"Okay... Enjoy",
+	];
+
+	var guidePosLeft = ["35%", "12.5%", "14%", "33%", "40%"];
+	var guidePosTop = ["25%", "21.5%", "58%", "40%", "30%"];
+	var curGuideStep = 1;
+	var maxGuideStep = 5;
+	var image = document.createElement("img", HTMLImageElement);
+	image.classList.add("img");
+
+	let blurScr = document.createElement("div");
+	blurScr.classList.add("blur-bg");
+	document.body.appendChild(blurScr);
+
+	let popup = document.createElement("div");
+	popup.classList.add("popup");
+	document.body.appendChild(popup);
+
+	let header = document.createElement("div");
+	header.classList.add("header");
+	popup.appendChild(header);
+
+	let headerCnt = document.createElement("div");
+	headerCnt.classList.add("headerCnt");
+	header.appendChild(headerCnt);
+
+	let closeBtn = document.createElement("button", HTMLButtonElement);
+	closeBtn.innerText = "X";
+	closeBtn.className = "closeBtn";
+	closeBtn.onclick = closePopup;
+	header.appendChild(closeBtn);
+
+	let headerTitle = createEl("h2", guideTites[curGuideStep - 1]);
+	headerCnt.appendChild(headerTitle);
+	let headerP = createEl("p", guideExplainations[curGuideStep - 1]);
+	headerCnt.appendChild(headerP);
+	let triangle = createEl("span", "");
+	triangle.classList.add("triangle");
+
+	let footer = document.createElement("div");
+	footer.classList.add("footer");
+	popup.appendChild(footer);
+
+	let step = document.createElement("div");
+	step.classList.add("step");
+	footer.appendChild(step);
+	step.innerText = `# ${curGuideStep}`;
+
+	let nextBtn = document.createElement("button", HTMLButtonElement);
+	nextBtn.innerText = "Next";
+	nextBtn.className = "nextBtn";
+	nextBtn.onclick = nextStep;
+	footer.appendChild(nextBtn);
+
+	function closePopup() {
+		blurScr.remove();
+		popup.remove();
+		image.remove();
+	}
+
+	function nextStep() {
+		image.remove();
+		if (curGuideStep == maxGuideStep) {
+			closePopup();
+		}
+		curGuideStep++;
+		step.innerText = `# ${curGuideStep}`;
+		headerTitle.innerText = guideTites[curGuideStep - 1];
+		headerP.innerText = guideExplainations[curGuideStep - 1];
+		headerCnt.appendChild(triangle);
+		popup.style.left = guidePosLeft[curGuideStep - 1];
+		popup.style.top = guidePosTop[curGuideStep - 1];
+
+		if (curGuideStep == 2 || curGuideStep == 4) {
+			image.src = `./Images/${guideTites[curGuideStep - 1]}.png`;
+			document.body.appendChild(image);
+		}
+
+		if (curGuideStep == maxGuideStep) {
+			nextBtn.innerText = "Close";
+			triangle.remove();
+		}
+	}
+
+	function createEl(tagName, text) {
+		let el = document.createElement(tagName);
+		el.innerText = text;
+		return el;
 	}
 }
 
