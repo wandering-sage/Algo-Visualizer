@@ -16,6 +16,8 @@ var server = http.createServer((req, res) => {
 		sendAptFile(req, res, "image/ico");
 	} else if (req.url.match(".gif$")) {
 		sendAptFile(req, res, "image/gif");
+	} else if (req.url.match(".png$")) {
+		sendAptFile(req, res, "image/png");
 	}
 });
 
