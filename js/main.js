@@ -73,7 +73,10 @@ function createArrayElement(h, w, m, i) {
 
 async function sortArray() {
 	var activeBtn = algoBtns.find((e) => e.className.includes("btnActive"));
-	if (!activeBtn) return;
+	if (!activeBtn) {
+		sortBtn.innerText = "Select Algo";
+		return;
+	}
 
 	sortBtn.style.backgroundColor = red;
 	sizeInput.disabled = true;
@@ -207,7 +210,11 @@ async function heapSort() {
 }
 
 async function quickSort() {
-	await qs(0, arraySize - 1);
+	let a = array.slice().sort((a, b) => a - b);
+	// checks if already sorted
+	if (JSON.stringify(array) != JSON.stringify(a)) {
+		await qs(0, arraySize - 1);
+	}
 	await colorChangeAll(100, green);
 	await colorChangeAll(500, sortedColor);
 
@@ -353,10 +360,23 @@ function guidePopup() {
 	footer.classList.add("footer");
 	popup.appendChild(footer);
 
-	let step = document.createElement("div");
-	step.classList.add("step");
-	footer.appendChild(step);
-	step.innerText = `# ${curGuideStep}`;
+	let stepNo = document.createElement("div");
+	stepNo.classList.add("stepNo");
+	footer.appendChild(stepNo);
+	stepNo.innerText = `# ${curGuideStep}`;
+
+	let stepIndicator = document.createElement("ul", HTMLUListElement);
+	stepIndicator.classList.add("stepIndicator");
+	footer.appendChild(stepIndicator);
+
+	for (let i = 0; i < maxGuideStep; i++) {
+		let li = document.createElement("li", HTMLLIElement);
+		li.classList.add("step");
+		stepIndicator.appendChild(li);
+	}
+
+	let steps = document.querySelectorAll(".step");
+	steps[curGuideStep - 1].classList.add("stepActive");
 
 	let nextBtn = document.createElement("button", HTMLButtonElement);
 	nextBtn.innerText = "Next";
@@ -376,7 +396,8 @@ function guidePopup() {
 			closePopup();
 		}
 		curGuideStep++;
-		step.innerText = `# ${curGuideStep}`;
+		steps[curGuideStep - 1].classList.add("stepActive");
+		stepNo.innerText = `# ${curGuideStep}`;
 		headerTitle.innerText = guideTites[curGuideStep - 1];
 		headerP.innerText = guideExplainations[curGuideStep - 1];
 		headerCnt.appendChild(triangle);
@@ -425,4 +446,5 @@ function toggleOpen() {
 			e.classList.remove("btnActive");
 	});
 	this.classList.toggle("btnActive");
+	sortBtn.innerText = "Sort!";
 }
