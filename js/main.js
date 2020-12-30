@@ -27,17 +27,20 @@ sizeInput.oninput = () => {
 	generateArray();
 };
 
-guidePopup();
-infoBtn.addEventListener("click", guidePopup);
-
+// To generate arrayBars on Load
 generateArray();
 genButton.addEventListener("click", generateArray);
+
+// To opean guide Tour popup on Load
+guidePopup();
+infoBtn.addEventListener("click", guidePopup);
 
 algoBtns.forEach((e) => e.addEventListener("click", toggleOpen));
 
 sortBtn.addEventListener("click", sortArray);
 
 function generateArray() {
+	// removes the old items and generates new one everyTime
 	array = [];
 	container.remove();
 	container = document.createElement("div");
@@ -73,11 +76,13 @@ function createArrayElement(h, w, m, i) {
 
 async function sortArray() {
 	var activeBtn = algoBtns.find((e) => e.className.includes("btnActive"));
+	// i.e. no algorithm is selected
 	if (!activeBtn) {
 		sortBtn.innerText = "Select Algo";
 		return;
 	}
 
+	// so that you cant click anywhere till the algo is running
 	sortBtn.style.backgroundColor = red;
 	sizeInput.disabled = true;
 	genButton.disabled = true;
