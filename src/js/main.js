@@ -1,8 +1,9 @@
 var container = document.querySelector(".arrayContainer");
 var cntrW = 0.75 * window.innerWidth;
 var cntrH = 0.75 * window.innerHeight;
-var sortingSpeed = 80;
+var sortingSpeed = 3;
 var sortDelay = 80;
+var speedms = [500, 200, 100, 30, 0];
 var arraySize = 100;
 var maxArraySIze = 200;
 var minArraySize = 10;
@@ -10,6 +11,7 @@ var array = [];
 var sizeInput = document.querySelector(".sizeInput");
 var speedInput = document.querySelector(".speedInput");
 var genButton = document.querySelector(".genButton");
+var sortBtnContr = document.querySelector(".sortBtnContr");
 var sortBtn = document.querySelector(".sortBtn");
 var infoBtn = document.querySelector(".infoBtn");
 var algoBtns = Array.from(document.querySelectorAll(".algoBtn"));
@@ -37,6 +39,8 @@ infoBtn.addEventListener("click", guidePopup);
 
 algoBtns.forEach((e) => e.addEventListener("click", toggleOpen));
 
+sortBtn.addEventListener("mousemove", hoverButton);
+sortBtn.addEventListener("mouseout", hoverInitialPosition);
 sortBtn.addEventListener("click", sortArray);
 
 function generateArray() {
@@ -117,7 +121,7 @@ async function swapContainerElement(i, j) {
 	array[j] = temp;
 	getContainerElement(i).style.height = `${array[i]}px`;
 	getContainerElement(j).style.height = `${array[j]}px`;
-	sortDelay = mapValue(sortingSpeed, 0, 100, 200, 0);
+	sortDelay = speedms[sortingSpeed];
 	await sleep(sortDelay);
 }
 async function dragSwap(i, j) {
@@ -128,7 +132,7 @@ async function dragSwap(i, j) {
 		getContainerElement(k).style.height = `${array[k]}px`;
 		getContainerElement(k - 1).style.height = `${array[k - 1]}px`;
 	}
-	sortDelay = mapValue(sortingSpeed, 0, 100, 200, 0);
+	sortDelay = speedms[sortingSpeed];
 	await sleep(sortDelay);
 }
 
@@ -136,7 +140,7 @@ async function colorChange(color, ...elms) {
 	elms.forEach((e) => {
 		getContainerElement(e).style.backgroundColor = color;
 	});
-	sortDelay = mapValue(sortingSpeed, 0, 100, 200, 0);
+	sortDelay = speedms[sortingSpeed];
 	if (color != blue) await sleep(sortDelay);
 }
 async function colorChangeAll(ms, color) {
@@ -216,7 +220,7 @@ async function heapSort() {
 
 async function quickSort() {
 	let a = array.slice().sort((a, b) => a - b);
-	// checks if already sorted
+	// checks if array is not sorted
 	if (JSON.stringify(array) != JSON.stringify(a)) {
 		await qs(0, arraySize - 1);
 	}
@@ -289,21 +293,49 @@ async function mergeSort() {
 				await colorChange(green, i);
 			} else {
 				await colorChange(red, i, j);
-				await dragSwap(i, j);
-				await colorChange(green, i, j);
+				await Promise.all([
+					dragSwap(i, j),
+					colorChange(blue, j),
+					colorChange(red, i + 1),
+				]);
+				await colorChange(green, i, i + 1);
 
 				m++;
 
 				if (l == 0 && r == arraySize - 1) {
 					colorChange(sortedColor, i);
 					colorChange(blue, j);
-				} else await colorChange(blue, i, j);
+				} else colorChange(blue, i, j);
 				i++;
 				j++;
 			}
 		}
-		await colorChange(blue, i);
+		colorChange(blue, i);
 	}
+}
+
+// ********************Button Hover****************************
+// ***********************************************************
+
+async function hoverButton(e) {
+	let x = e.offsetX;
+	let y = e.offsetY;
+	let walk = 80;
+	let xWalk = Math.round((x / sortBtn.clientWidth) * walk - walk / 2);
+	let yWalk = Math.round((y / sortBtn.clientHeight) * walk - walk / 2);
+	moveButton(xWalk, yWalk);
+
+	function moveButton(x, y) {
+		sortBtn.style.transform = `translate(${x}px,${y}px)`;
+		sortBtn.style.boxShadow = `${-x / 2}px ${
+			-y / 2
+		}px 25px -10px rgba(0,0,0,0.7)`;
+	}
+}
+
+function hoverInitialPosition(e) {
+	sortBtn.style.transform = `translate(0px,0px)`;
+	sortBtn.style.boxShadow = "0 0 30px -30px";
 }
 
 // *************************** Guide Popup *********************
