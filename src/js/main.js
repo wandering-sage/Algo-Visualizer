@@ -153,6 +153,7 @@ async function colorChangeAll(ms, color) {
 // *************************Algorithms*********************************
 // *********************************************************************
 
+// *********************Bubble Sort****************************
 async function bubbleSort() {
 	let n = arraySize;
 	while (n >= 1) {
@@ -175,6 +176,7 @@ async function bubbleSort() {
 	await colorChangeAll(500, sortedColor);
 }
 
+// *********************Heap Sort****************************
 async function heapSort() {
 	let n = arraySize;
 	for (let i = n / 2 - 1; i >= 0; i--) await heapify(n, i);
@@ -218,6 +220,7 @@ async function heapSort() {
 	}
 }
 
+// *********************Quick Sort****************************
 async function quickSort() {
 	let a = array.slice().sort((a, b) => a - b);
 	// checks if array is not sorted
@@ -262,6 +265,7 @@ async function quickSort() {
 	}
 }
 
+// *********************Merge Sort****************************
 async function mergeSort() {
 	await msSplit(0, arraySize - 1);
 	await colorChangeAll(100, green);
@@ -293,11 +297,7 @@ async function mergeSort() {
 				await colorChange(green, i);
 			} else {
 				await colorChange(red, i, j);
-				await Promise.all([
-					dragSwap(i, j),
-					colorChange(blue, j),
-					colorChange(red, i + 1),
-				]);
+				await Promise.all([dragSwap(i, j), colorChange(blue, j), colorChange(red, i + 1)]);
 				await colorChange(green, i, i + 1);
 
 				m++;
@@ -327,9 +327,7 @@ async function hoverButton(e) {
 
 	function moveButton(x, y) {
 		sortBtn.style.transform = `translate(${x}px,${y}px)`;
-		sortBtn.style.boxShadow = `${-x / 2}px ${
-			-y / 2
-		}px 25px -10px rgba(0,0,0,0.7)`;
+		sortBtn.style.boxShadow = `${-x / 2}px ${-y / 2}px 25px -10px rgba(0,0,0,0.7)`;
 	}
 }
 
@@ -342,13 +340,7 @@ function hoverInitialPosition(e) {
 // *************************************************************
 
 function guidePopup() {
-	var guideTites = [
-		"Welcome",
-		"Algorithms",
-		"Visualize",
-		"Controls",
-		"Thank You",
-	];
+	var guideTites = ["Welcome", "Algorithms", "Visualize", "Controls", "Thank You"];
 	var guideExplainations = [
 		"Hello, this is a Sorting Algorithm Visualizer",
 		"Firstly, select an Algorithm from here to Visualize. They are listed in slowest to fastest order",
@@ -479,8 +471,7 @@ function mapValue(val, minFrom, maxFrom, minTo, maxTo) {
 
 function toggleOpen() {
 	algoBtns.forEach((e) => {
-		if (e.classList.contains("btnActive") && e != this)
-			e.classList.remove("btnActive");
+		if (e.classList.contains("btnActive") && e != this) e.classList.remove("btnActive");
 	});
 	this.classList.toggle("btnActive");
 	sortBtn.innerText = "Sort!";
