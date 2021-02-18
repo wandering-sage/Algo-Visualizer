@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>Algo-Visualizer</h1>
+<h1><a href="https://wandering-sage.github.io/Algo-Visualizer/">Algo-Visualizer</a></h1>
 
 <p>
   <strong>A tool to visualize algorithms step by step</strong>
