@@ -5,7 +5,7 @@ var sortingSpeed = 3;
 var sortDelay = 80;
 var speedms = [500, 200, 100, 30, 0];
 var arraySize = 100;
-var maxArraySIze = 200;
+var maxArraySize = 200;
 var minArraySize = 10;
 var array = [];
 var sizeInput = document.querySelector(".sizeInput");
@@ -20,6 +20,19 @@ var red = "rgb(244, 134, 66)";
 var blue = "rgb(66, 134, 244)";
 var sortedColor = "rgb(181,119,231)";
 var yellow = "rgb(235,233,93)";
+var algoNames = ["Bubble Sort","Heap Sort", "Quick Sort", "Merge Sort"]
+var mediaQuery = window.matchMedia(' (max-width : 480px)');
+
+if(mediaQuery.matches){
+	maxArraySize = 60;
+	arraySize = 40;
+	sizeInput.max = maxArraySize;
+	sizeInput.value = arraySize;
+	cntrH = 0.6* window.innerHeight;
+	cntrW = 0.9* window.innerWidth;
+
+	algoBtns.forEach((e,i)=>e.innerHTML = algoNames[i])
+}
 
 speedInput.oninput = () => {
 	sortingSpeed = speedInput.value;
@@ -59,7 +72,9 @@ function generateArray() {
 
 function drawArray(arr) {
 	arr.forEach((el, i) => {
-		var m = mapValue(arraySize, minArraySize, maxArraySIze, 10, 2.5);
+		var maxMargin = mediaQuery.matches?5:10;
+		var minMargin = 2;
+		var m = mapValue(arraySize, minArraySize, maxArraySize, maxMargin, minMargin);
 		var w = cntrW / arraySize - m;
 		var x = createArrayElement(el, w, m, i);
 		container.appendChild(x);
@@ -323,7 +338,9 @@ async function hoverButton(e) {
 	let walk = 80;
 	let xWalk = Math.round((x / sortBtn.clientWidth) * walk - walk / 2);
 	let yWalk = Math.round((y / sortBtn.clientHeight) * walk - walk / 2);
-	moveButton(xWalk, yWalk);
+	if(!mediaQuery.matches){
+		moveButton(xWalk, yWalk);
+	}
 
 	function moveButton(x, y) {
 		sortBtn.style.transform = `translate(${x}px,${y}px)`;
@@ -349,8 +366,10 @@ function guidePopup() {
 		"Okay... Enjoy",
 	];
 
-	var guidePosLeft = ["35%", "12.5%", "14%", "33%", "40%"];
+	var guidePosLeft = ["35%", "12.5%", "14%", "37%", "40%"];
 	var guidePosTop = ["25%", "21.5%", "58%", "40%", "30%"];
+	var mobilePosLeft = ["50%", "39%", "60%", "50%", "50%"]; 
+	var mobilePosTop = ["40%", "26%", "26%", "65%", "40%"]; 
 	var curGuideStep = 1;
 	var maxGuideStep = 5;
 	var image = document.createElement("img", HTMLImageElement);
@@ -423,6 +442,7 @@ function guidePopup() {
 		image.remove();
 		if (curGuideStep == maxGuideStep) {
 			closePopup();
+			return;
 		}
 		curGuideStep++;
 		steps[curGuideStep - 1].classList.add("stepActive");
@@ -430,10 +450,12 @@ function guidePopup() {
 		headerTitle.innerText = guideTites[curGuideStep - 1];
 		headerP.innerText = guideExplainations[curGuideStep - 1];
 		headerCnt.appendChild(triangle);
-		popup.style.left = guidePosLeft[curGuideStep - 1];
-		popup.style.top = guidePosTop[curGuideStep - 1];
+		var leftPos = mediaQuery.matches?mobilePosLeft[curGuideStep - 1]:guidePosLeft[curGuideStep - 1];
+		var topPos = mediaQuery.matches?mobilePosTop[curGuideStep - 1]:guidePosTop[curGuideStep - 1];
+		popup.style.left = leftPos;
+		popup.style.top = topPos;
 
-		if (curGuideStep == 2 || curGuideStep == 4) {
+		if ((curGuideStep == 2 || curGuideStep == 4) && !mediaQuery.matches) {
 			image.src = `./Images/${guideTites[curGuideStep - 1]}.png`;
 			document.body.appendChild(image);
 		}
