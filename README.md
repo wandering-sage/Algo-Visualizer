@@ -32,7 +32,7 @@
 - Change directory to where you unzipped this folder.
 ```bash
 cd Desktop
-git colone https://github.com/wandering-sage/Algo-Visualizer.git
+git clone https://github.com/wandering-sage/Algo-Visualizer.git
 cd Algo-Visualizer
 ```
 - Type npm start to run the program.
