@@ -32,7 +32,7 @@
 - Change directory to where you unzipped this folder.
 ```bash
 cd Desktop
-cd Truth-dare-main
+cd Algo-Visualizer
 ```
 - Type npm start to run the program.
 ```bash
