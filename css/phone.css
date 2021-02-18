@@ -1,0 +1,100 @@
+@media only screen and (max-width : 480px){
+    body{
+        font-size: 10px;
+    }
+
+    .sidebar {
+        width: 90vw;
+        margin-left: 5vw;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+    }
+
+    .algoBtn {
+        height: 11vh;
+        width: 13vw;
+        padding: 0;
+        border-radius: 0 0 50% 50% / 30%;
+        text-align: center;
+    }
+
+    .algoBtn:hover{
+        border-radius: 0 0 50% 50% / 30%;
+    }
+
+    .btnActive {
+        transform: scale(1.15) !important;
+        background-color: hsl(313, 95, 4);
+    }
+
+    .sortBtnContr {
+        width: auto;
+        margin: 0;
+    }
+    .sortBtn {
+        width: 18vw;
+    }
+
+    .arrayContainer {
+        left: 5%;
+    }
+
+    .toolbar > div {
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .toolbar>div>div:nth-child(2){
+        margin-top: 5px;
+    }
+
+    .genButton {
+        cursor: pointer;
+        background-color: transparent;
+        border: 2px solid rgba(66, 244, 134, 0.8);
+        border-radius: 5px;
+        outline: none;
+        color: rgba(66, 244, 134, 0.8);
+        font-size: 0.8em;
+        transition: all 0.25s;
+    }
+    .genButton:hover {
+        background-color: transparent;
+        color: rgba(66, 244, 134, 0.8);
+    }
+    .genButton:active {
+        background-color: rgba(66, 244, 134, 0.8);
+        color: rgb(33, 36, 66);
+    }
+    .genButton:disabled {
+        color: #ccc;
+    }
+
+    .infoBtn{
+        top: 94%;
+    }
+    .madeBy{
+        display: none;
+    }
+
+    /*-------------------------Popup-------------------------*/
+    .popup {
+        left: 50%;
+        top: 45%;
+        transform: translate(-50%,-50%);
+    }
+    .headerCnt {
+        width: 45vw;
+        padding: 20px;
+    }
+    .stepNo {
+        padding-left: 10px;
+    }
+    .stepIndicator {
+        width: 30vw;
+    }
+    .triangle{
+        display: none;
+    }
+}
