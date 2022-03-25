@@ -24,6 +24,12 @@ body {
 	align-items: center;
 	margin-right: 10px;
 }
+.curEl{
+    position: absolute;
+    left: 2vw;
+    bottom: 16%;
+    font-size: 1.4em;
+}
 
 .arrayContainer {
 	position: absolute;
@@ -39,6 +45,9 @@ body {
 	height: 10px;
 	width: 10px;
 	margin-left: 10px;
+}
+.arrayElement:hover {
+    background-color: orange !important;
 }
 
 .sidebar {
@@ -81,7 +90,7 @@ body {
 	font-size: 1.4em;
 	align-items: center;
 	justify-content: center;
-	transition: all 0.4s ease-in-out;
+	transition: all 0.33s ease-in-out;
 }
 
 .algoBtn span {
@@ -91,7 +100,7 @@ body {
 .algoBtn span:nth-child(even){
 	overflow: hidden;
 	letter-spacing: -1em;
-	transition: all 0.4s ease-in-out;
+	transition: all 0.33s ease-in-out;
 }
 
 .algoBtn:hover span:nth-child(even){
@@ -99,7 +108,7 @@ body {
 }
 .algoBtn:hover{
 	border-radius: 0 20% 20% 0 / 70%;
-	transition: all 0.4s ease-in-out;
+	transition: all 0.33s ease-in-out;
 }
 
 .btnActive {
@@ -130,7 +139,7 @@ body {
 	height: 6.5vh;
 	border-radius: 20px;
 	background-color: rgb(66, 244, 134);
-	transition: all 0.25s ease;
+	transition: all 0.15s ease;
 }
 
 .madeBy {
