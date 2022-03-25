@@ -4,7 +4,7 @@ var cntrH = 0.75 * window.innerHeight;
 var sortingSpeed = 3;
 var sortDelay = 80;
 var speedms = [500, 200, 100, 30, 0];
-var arraySize = 100;
+var arraySize = 40;
 var maxArraySize = 200;
 var minArraySize = 10;
 var array = [];
@@ -22,17 +22,20 @@ var sortedColor = "rgb(181,119,231)";
 var yellow = "rgb(235,233,93)";
 var algoNames = ["Bubble Sort","Heap Sort", "Quick Sort", "Merge Sort"]
 var mediaQuery = window.matchMedia(' (max-width : 480px)');
+var currentElementHeight = document.querySelector("span.curHeight");
 
 if(mediaQuery.matches){
+    document.querySelector(".curEl").style.display = "None";
 	maxArraySize = 60;
 	arraySize = 40;
 	sizeInput.max = maxArraySize;
-	sizeInput.value = arraySize;
 	cntrH = 0.6* window.innerHeight;
 	cntrW = 0.9* window.innerWidth;
 
 	algoBtns.forEach((e,i)=>e.innerHTML = algoNames[i])
 }
+
+sizeInput.value = arraySize;
 
 speedInput.oninput = () => {
 	sortingSpeed = speedInput.value;
@@ -90,7 +93,13 @@ function createArrayElement(h, w, m, i) {
 	div.style.width = `${w}px`;
 	div.style.marginLeft = `${m}px`;
 	div.style.backgroundColor = "rgb(66, 134, 244)";
+    div.addEventListener("mouseover", updateElementHeight);
 	return div;
+}
+
+function updateElementHeight(el)
+{
+    currentElementHeight.innerHTML = el.target.clientHeight;
 }
 
 async function sortArray() {
@@ -248,9 +257,11 @@ async function quickSort() {
 	async function qs(lo, hi) {
 		if (lo < hi) {
 			let p = await partition(lo, hi);
-			await qs(lo, p);
+			await qs(lo, p - 1);
 			await qs(p + 1, hi);
 		}
+        if(lo == hi)
+            await colorChange(sortedColor, lo);
 	}
 	async function partition(lo, hi) {
 		let pivot = array[lo];
@@ -259,6 +270,10 @@ async function quickSort() {
 		await colorChange(green, i);
 		await colorChange(green, j);
 		while (true) {
+            if (i >= j) {
+				await colorChange(sortedColor, j);
+				return j;
+			}
 			while (array[i] < pivot) {
 				await colorChange(blue, i);
 				i++;
@@ -268,10 +283,6 @@ async function quickSort() {
 				await colorChange(blue, j);
 				j--;
 				await colorChange(green, j);
-			}
-			if (i >= j) {
-				await colorChange(sortedColor, j);
-				return j;
 			}
 			await colorChange(red, i, j);
 			await swapContainerElement(i, j);
@@ -343,7 +354,7 @@ async function hoverButton(e) {
 	}
 
 	function moveButton(x, y) {
-		sortBtn.style.transform = `translate(${x}px,${y}px)`;
+		sortBtn.style.transform = `scale(1.04)`;
 		sortBtn.style.boxShadow = `${-x / 2}px ${-y / 2}px 25px -10px rgba(0,0,0,0.7)`;
 	}
 }
